@@ -1,0 +1,42 @@
+# Dataset — never upload
+data/
+
+# Model weights — too large for git
+checkpoints/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Heatmaps generated at runtime
+heatmaps/
+
+# Database — generated at runtime
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Temp files
+*.tmp
+*.bak
+
+
+error_log.txt
