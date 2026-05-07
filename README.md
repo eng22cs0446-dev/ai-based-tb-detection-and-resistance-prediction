@@ -8,6 +8,9 @@ NexTB is a comprehensive AI-powered Tuberculosis detection system. It features a
 - **`frontend/`**: Contains the React + Vite single page application (SPA).
 - **`tb_system/`**: Core machine learning models, attention map generation (GradCAM++), and PDF report builders.
 
+## Dataset
+Full dataset download:
+https://drive.google.com/file/d/1Mfe-U-pKej5b6jsUacfu1BEOH_fxu6ht/view?usp=sharing
 ---
 
 ## 🛠️ Installation & Setup
