@@ -60,9 +60,9 @@ def elastic_deformation(img: np.ndarray, alpha: float = 20.0, sigma: float = 5.0
                             (0, 0), sigma) * alpha
     dy   = cv2.GaussianBlur((np.random.rand(H, W) * 2 - 1).astype(np.float32),
                             (0, 0), sigma) * alpha
-    x, y = np.meshgrid(np.arange(W), np.arange(H))
-    map_x = np.clip(x + dx, 0, W - 1).astype(np.float32)
-    map_y = np.clip(y + dy, 0, H - 1).astype(np.float32)
+    x, y = np.meshgrid(np.arange(W, dtype=np.float32), np.arange(H, dtype=np.float32))
+    map_x = np.clip(x + dx, 0, W - 1)
+    map_y = np.clip(y + dy, 0, H - 1)
     return cv2.remap(img, map_x, map_y, cv2.INTER_LINEAR)
 
 

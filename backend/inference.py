@@ -182,7 +182,7 @@ def run_inference(image_b64: str, patient: DetailedPatient, state: dict) -> dict
         recs.insert(0, f"⚠ {dr.prediction} risk — refer to DR-TB centre immediately")
 
     # ── GradCAM heatmap ───────────────────────────────────────
-    tensor_for_cam = tensor.clone().detach().requires_grad_(True)
+    tensor_for_cam = tensor.to(device).clone().detach().requires_grad_(True)
     cam, _         = gradcam(tensor_for_cam, metadata=None, cls=1)
     heatmap_np     = cam.detach().cpu().numpy()
 

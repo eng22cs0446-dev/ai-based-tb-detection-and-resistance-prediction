@@ -1,0 +1,35 @@
+/* Design System Tokens */
+:root {
+  /* Colors */
+  --color-bg-base: #0B0E14;
+  --color-bg-surface: #151A22;
+  --color-bg-elevated: #1F2631;
+  --color-border: #2D3748;
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A0AEC0;
+  --color-text-muted: #718096;
+
+  --color-accent: #00F2FE;
+  --color-accent-hover: #4FACFE;
+  
+  --color-danger: #F56565;
+  --color-success: #48BB78;
+  --color-warning: #ECC94B;
+
+  /* Elevations & Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 15px rgba(0, 242, 254, 0.3);
+  --shadow-glow-danger: 0 0 15px rgba(245, 101, 101, 0.3);
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  
+  /* Layout */
+  --sidebar-width: 250px;
+  --page-max-width: 1200px;
+}

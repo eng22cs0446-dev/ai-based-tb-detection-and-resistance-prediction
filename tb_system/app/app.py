@@ -100,24 +100,64 @@ def load_tb_model():
         return None, None, f"Weights not found at: {ckpt}"
 
     model = MultiScaleTBModel(
-        num_classes=2,
-        pretrained=False,
-        dropout=0.4,
-        fusion_dim=256,
-        use_metadata=False,
+        num_classes=2, pretrained=False, dropout=0.4,
+        fusion_dim=256, use_metadata=False, use_proj_head=True
     )
-    model.load_state_dict(torch.load(ckpt, map_location="cpu"))
-    gradcam_engine = MultiScaleGradCAMPP(model)
-    model.eval()
+
+    # ── Smart checkpoint loader — handles old/new architecture mismatch ──
+    raw = torch.load(ckpt, map_location="cpu")
+
+    # Detect old architecture (has mlp keys, direct scale_attn shape [3,768])
+    is_old_arch = any("cbam.mlp" in k for k in raw.keys())
+
+    if is_old_arch:
+        # Remap old keys → new keys
+        remapped = {}
+        for k, v in raw.items():
+            new_k = k
+            # cbam.mlp → cbam.ch_avg AND cbam.ch_max (copy same weights to both)
+            if "cbam.mlp" in k:
+                new_k_avg = k.replace("cbam.mlp", "cbam.ch_avg")
+                new_k_max = k.replace("cbam.mlp", "cbam.ch_max")
+                remapped[new_k_avg] = v.clone()
+                remapped[new_k_max] = v.clone()
+            # fusion.scale_attn: old [3,768] → new [128,768] needs resize
+            elif k == "fusion.scale_attn.0.weight":
+                # Pad old [3,768] weight into new [128,768] shape
+                new_w = torch.zeros(128, 768)
+                new_w[:3, :] = v   # keep original 3 rows
+                remapped[k] = new_w
+            elif k == "fusion.scale_attn.0.bias":
+                # Pad old [3] bias into new [128] shape
+                new_b = torch.zeros(128)
+                new_b[:3] = v
+                remapped[k] = new_b
+            else:
+                remapped[k] = v
+        # proj_head keys don't exist in old checkpoint — leave at random init
+        missing, unexpected = model.load_state_dict(remapped, strict=False)
+        print(f"[load_tb_model] Old arch adapted. Missing={len(missing)} Unexpected={len(unexpected)}")
+    else:
+        missing, unexpected = model.load_state_dict(raw, strict=False)
+        print(f"[load_tb_model] New arch. Missing={len(missing)} Unexpected={len(unexpected)}")
 
     # Load temperature scaler if available
-    t_path = os.path.join(_project, "checkpoints", "temperature_scaler.pth")
-    scaler = None
-    if os.path.exists(t_path):
-        scaler = TemperatureScaler(model)
-        scaler.load_state_dict(torch.load(t_path, map_location="cpu"))
-        scaler.eval()
-        print("[TemperatureScaler] Loaded — confidence scores are calibrated")
+    # Build GradCAM engine
+    model.eval()
+    gradcam_engine = MultiScaleGradCAMPP(model)
+
+    # Load temperature scaler if available
+    scaler = TemperatureScaler(model)
+    t_path = os.path.abspath(os.path.join(_project, "checkpoints", "temperature_scaler.pth"))
+    if not os.path.exists(t_path):
+        print("[load_tb_model] No temperature scaler — using T=1.0")
+        return model, scaler, gradcam_engine, None
+
+    t_data = torch.load(t_path, map_location="cpu")
+    if "temperature" in t_data and not isinstance(t_data["temperature"], torch.Tensor):
+        scaler.temperature.data = torch.tensor([float(t_data["temperature"])])
+    else:
+        scaler.load_state_dict(t_data, strict=False)
 
     return model, scaler, gradcam_engine, None
 

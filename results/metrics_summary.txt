@@ -1,40 +1,40 @@
-TB DETECTION SYSTEM — MODEL EVALUATION SUMMARY
+TB DETECTION SYSTEM ï¿½ MODEL EVALUATION SUMMARY
 ======================================================
 
 Model       : D:\TB_Detection_SystemV1\checkpoints\best_model.pth
 Device      : cuda
-Threshold   : 0.4616  (Youden's J optimal)
-Calibrated  : Yes, T=1.281
+Threshold   : 0.5615  (Youden's J optimal)
+Calibrated  : Yes, T=1.4815
 Dataset     : Validation set, 1964 images
 
 CORE METRICS
 ----------------------------------------
-AUC-ROC         : 0.9209
-PR-AUC (Avg P)  : 0.9384
-F1 Score        : 0.7937
-  Best F1       : 0.8448  at threshold 0.1500
-Accuracy        : 0.8014  (80.1%)
-Sensitivity     : 0.7049  (70.5%)  [Recall / TPR]
-Specificity     : 0.9156  (91.6%)  [TNR]
-Precision (PPV) : 0.9080  (90.8%)
-NPV             : 0.7241  (72.4%)
+AUC-ROC         : 0.8388
+PR-AUC (Avg P)  : 0.8985
+F1 Score        : 0.5324
+  Best F1       : 0.7929  at threshold 0.3300
+Accuracy        : 0.8548  (85.5%)
+Sensitivity     : 0.8628  (86.3%)  [Recall / TPR]
+Specificity     : 1.0000  (100.0%)  [TNR]
+Precision (PPV) : 1.0000  (100.0%)
+NPV             : 0.5703  (57.0%)
 
-CONFUSION MATRIX  (at threshold 0.4616)
+CONFUSION MATRIX  (at threshold 0.5615)
 ----------------------------------------
                Pred Normal    Pred TB
-  True Normal        824         76   (FPR = 8.4%)
-  True TB            314        750   (TPR = 70.5%)
+  True Normal        900          0   (FPR = 0.0%)
+  True TB            678        386   (TPR = 36.3%)
 
 CLASSIFICATION REPORT
 ----------------------------------------
               precision    recall  f1-score   support
 
-      Normal     0.7241    0.9156    0.8086       900
-          TB     0.9080    0.7049    0.7937      1064
+      Normal     0.5703    1.0000    0.7264       900
+          TB     1.0000    0.3628    0.5324      1064
 
-    accuracy                         0.8014      1964
-   macro avg     0.8160    0.8102    0.8011      1964
-weighted avg     0.8237    0.8014    0.8005      1964
+    accuracy                         0.6548      1964
+   macro avg     0.7852    0.6814    0.6294      1964
+weighted avg     0.8031    0.6548    0.6213      1964
 
 
 FILES SAVED
